@@ -5,6 +5,7 @@ import './App.css';
 
 const App = () => {
   const [editService ,setEditservice]=useState(null);
+  
   const [services, setServices] = useState([{
     id:0,
     name:"Routine Check-up",
@@ -27,7 +28,9 @@ const App = () => {
     setServices([...services, newService]);
   };
 
-  
+  const sethandleEditservice=(service)=>{
+    setEditservice(service);
+  }
   const updateService = (updatedService) => {
     const updatedServices = services.map((service) =>
       service.id === updatedService.id ? updatedService : service
@@ -55,10 +58,10 @@ const App = () => {
         services={services}
         
         deleteService={deleteService}
-        setEditservice={setEditservice}
+        sethandleEditservice={sethandleEditservice}
       />
 
-      <ServiceForm editService={editService} setEditservice={setEditservice} updateService={updateService} services={services} addService={addService} />
+      <ServiceForm editService={editService} sethandleEditservice={sethandleEditservice} updateService={updateService} services={services} addService={addService} />
     </div>
     </div>
   );

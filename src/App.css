@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-h1{
-  line-height: 0;
-}
 
 input ,textarea{
   

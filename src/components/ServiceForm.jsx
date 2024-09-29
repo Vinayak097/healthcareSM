@@ -1,77 +1,132 @@
 import React, { useState } from "react";
 import "../App.css";
-const ServiceForm = ({editService,updateService,setEditservice, addService ,services }) => {
+const ServiceForm = ({
+  editService,
+  updateService,
+  sethandleEditservice,
+  addService,
+  services,
+}) => {
   const [newService, setNewService] = useState({
-    id:null,
+    id: null,
     name: "",
     description: "",
     price: "",
   });
+  const [error ,seterror]=useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!newService.name || !newService.description || !newService.price) {
-      alert("Please fill all fields.");
+    if (editService) {
+      if (!editService.name || !editService.description || !editService.price) {
+        
+        seterror("please fill all fieds")
+        setTimeout(() => {
+          seterror(null)          
+        }, 5000);
+        return;
+      }
+      updateService(editService);
+      sethandleEditservice(null);
       return;
     }
 
-    addService({...newService,id:services[services.length-1].id+1 });
+    if (!newService.name || !newService.description || !newService.price) {
+      seterror("please fill all fieds")
+        setTimeout(() => {
+          seterror(null)          
+        }, 5000);
+      return;
+    }
+
+    addService({ ...newService, id: services[services.length - 1].id + 1 });
     setNewService({ name: "", description: "", price: "" });
   };
 
   return (
-    <form className="border mt-4 p-4 bg-white rounded-lg" onSubmit={ editService ? updateService(editService)  : handleSubmit}>
-      <p className=" text-xl font-bold">Add new Services</p>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 ">
-        <div>
-          <p className="label" htmlFor="">Name</p>
-
+    <form
+      className="border mt-4 p-4 bg-white rounded-lg"
+      onSubmit={handleSubmit}
+    >
+      <p className="text-xl font-bold mb-4">Add New Services</p>
+      <div className="grid lg:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <label className="label" htmlFor="name">
+            Name
+          </label>
           <input
             type="text"
+            id="name"
             placeholder="Service Name"
-            value={editService? editService.name :newService.name}
-            className="border  w-full  bg-blue-50 p-2 rounded-md"
-            onChange={(e) => editService? setEditservice({...editService,name:e.target.value}):
-              setNewService({ ...newService, name: e.target.value })
+            value={editService ? editService.name : newService.name}
+            className="border w-full bg-blue-50 p-2 rounded-md"
+            onChange={(e) =>
+              editService
+                ? sethandleEditservice({ ...editService, name: e.target.value })
+                : setNewService({ ...newService, name: e.target.value })
             }
           />
         </div>
-        
 
-        <div className="row-span-2 ">
-          <p htmlFor=""  className="label  ">Description</p>
-
+        <div className="lg:row-span-2 space-y-1">
+          <label className="label" htmlFor="description">
+            Description
+          </label>
           <textarea
-            type="text"
-            className="border   bg-blue-50 h-full w-full   p-2 rounded-md"
+            id="description"
+            className="border w-full bg-blue-50 p-2 rounded-md"
             placeholder="Service Description"
-            value={editService? editService.description :newService.description}
-            onChange={(e) => editService? setEditservice({...editService,description:e.target.value}):
-              setNewService({ ...newService, description: e.target.value })
+            value={
+              editService ? editService.description : newService.description
             }
+            onChange={(e) =>
+              editService
+                ? sethandleEditservice({
+                    ...editService,
+                    description: e.target.value,
+                  })
+                : setNewService({ ...newService, description: e.target.value })
+            }
+            rows="5"
           />
         </div>
-        <div>
-          <p htmlFor=""  className="label">Price</p>
+
+        <div className="space-y-1">
+          <label className="label" htmlFor="price">
+            Price
+          </label>
           <input
             type="number"
+            id="price"
             placeholder="Service Price"
-            className="border   w-full  bg-blue-50   p-2 rounded-md"
-            value={ editService ? editService.price :newService.price}
-            onChange={(e) => editService? setEditservice({...editService,price:e.target.value}):
-              setNewService({
-                ...newService,
-                price: parseFloat(e.target.value),
-              })
+            className="border w-full bg-blue-50 p-2 rounded-md"
+            value={editService ? editService.price : newService.price}
+            onChange={(e) =>
+              editService
+                ? sethandleEditservice({
+                    ...editService,
+                    price: e.target.value,
+                  })
+                : setNewService({
+                    ...newService,
+                    price: parseFloat(e.target.value),
+                  })
             }
           />
-        </div> 
-        <div className="col-span-2 ">
-        <button className="mt-2 float-end bg-blue-400 hover:bg-blue-300 rounded-lg     border border-blue-500 py-2 px-4 text-white" type="submit"> {editService? "Update service":"Add Service"}</button>
+        </div>
+          <p className="text-red-500 font-bold text-md">{error}</p>
+        <div className="lg:col-span-2 mt-2 flex gap-2 justify-end">
+          {editService ? <button className=" p-2 border-blue-500 hover:bg-blue-100  rounded-lg border " onClick={()=>{sethandleEditservice(null)}}>
+            Cancel
+          </button> :""}
+          <button
+            className="bg-blue-400 hover:bg-blue-300 rounded-lg border border-blue-500 py-2 px-4 text-white"
+            type="submit"
+          >
+            {editService ? "Update Service" : "Add Service"}
+          </button>
+        </div>
       </div>
-      </div>
-      
-      
     </form>
   );
 };
